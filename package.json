@@ -1,0 +1,12 @@
+{
+  "name": "@heyrtl/doorman",
+  "version": "0.1.0",
+  "description": "Same URL. HTML for browsers. Markdown for clients that ask for it.",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "exports": { ".": { "types": "./src/index.d.ts", "import": "./src/index.js" } },
+  "files": ["src", "docs", "DOORMAN.md", "README.md"],
+  "repository": { "type": "git", "url": "git+https://github.com/heyrtl/doorman.git" },
+  "scripts": { "test": "node --test", "demo": "node examples/server.mjs" },
+  "license": "UNLICENSED"
+}

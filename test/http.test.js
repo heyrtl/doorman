@@ -1,0 +1,40 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import { createDemoServer } from '../examples/server.mjs';
+
+test('real HTTP: HTML and Markdown share a URL, HEAD and fallthrough work', async (t) => {
+  const server = createDemoServer();
+  t.after(() => new Promise((resolve, reject) => {
+    server.closeAllConnections();
+    server.close((error) => error ? reject(error) : resolve());
+  }));
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const url = `http://127.0.0.1:${server.address().port}/`;
+  for (const accept of ['text/html', 'text/markdown', 'text/html', 'text/markdown']) {
+    const response = await fetch(url, { headers: { accept } });
+    assert.equal(response.status, 200);
+    assert.equal(response.url, url);
+    assert.equal(response.headers.get('vary'), 'Accept');
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const body = await response.text();
+    assert.match(body, /Hello from Doorman/);
+    assert.match(body, /This content is rendered by JavaScript in the browser/);
+    if (accept === 'text/markdown') {
+      assert.equal(response.headers.get('content-type'), 'text/markdown; charset=utf-8');
+      assert.match(body, /^# Hello from Doorman/);
+      assert.doesNotMatch(body, /<script>/);
+    } else {
+      assert.match(response.headers.get('content-type'), /^text\/html/);
+      assert.match(body, /<main id="content"><\/main><script>/);
+    }
+  }
+  const head = await fetch(url, { method: 'HEAD', headers: { accept: 'text/markdown' } });
+  assert.equal(head.headers.get('content-type'), 'text/markdown; charset=utf-8');
+  assert.equal(await head.text(), '');
+  const missing = await fetch(`${url}missing`, { headers: { accept: 'text/markdown' } });
+  assert.equal(missing.status, 404);
+  const post = await fetch(url, { method: 'POST', headers: { accept: 'text/markdown' } });
+  assert.equal(post.status, 405);
+});
