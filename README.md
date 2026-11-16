@@ -30,6 +30,16 @@ The agent installs the package, adapts the integration to your stack, and prepar
 
 **Reading a site that supports Doorman?** Request its existing page URL with `Accept: text/markdown`. You do not need to install the package to read that response. If your web tool cannot set request headers, it may receive the normal HTML instead.
 
+```sh
+curl -H 'Accept: text/markdown' https://example.com/path/to/page
+```
+
+Replace `https://example.com/path/to/page` with the page's normal URL. Keep the same path and query parameters; no `.md` suffix is needed. For a live example:
+
+```sh
+curl -H 'Accept: text/markdown' https://ratul.fi
+```
+
 ## Why I built it
 
 I added Markdown content negotiation to my own JavaScript-rendered site, then wanted to make that setup easy to repeat. The useful part was simple: let the HTTP request choose the format, and serve both versions from the same content.
