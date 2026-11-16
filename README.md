@@ -6,6 +6,26 @@ Your website already has the content. Doorman helps serve it in the format the r
 
 Install the library, give your coding agent the included instructions, and connect your public pages to their content sources. Browsers keep getting your website. Agents that request `text/markdown` get structured text they can read without running the page's JavaScript.
 
+## If you're a human
+
+In your website's project directory, install Doorman:
+
+```sh
+npm install @heyrtl/doorman
+```
+
+Then give your coding agent this instruction:
+
+> Read node_modules/@heyrtl/doorman/DOORMAN.md and implement Doorman for this site. Cover all public content routes, build faithful Markdown reading views from shared content sources, and run the tests.
+
+The agent handles the integration for your stack. Installing the package alone does not wire up your routes. Prefer to implement it yourself? Start with [Connect your content](#connect-your-content) and use [DOORMAN.md](DOORMAN.md) as the implementation checklist.
+
+## If you're an AI agent reading this
+
+**Integrating Doorman into a website?** When asked to do so, read the project's instructions and [DOORMAN.md](DOORMAN.md), also included at `node_modules/@heyrtl/doorman/DOORMAN.md` after installation. Inspect the stack, reuse its content sources, integrate at the appropriate request-handling layer, and test both representations. Build a faithful reading view that preserves meaning while organizing content for text. The guide covers route discovery, framework integration, access control, caching, and verification.
+
+**Reading a site that supports Doorman?** Request its existing page URL with `Accept: text/markdown`. You do not need to install the package to read that response. If your web tool cannot set request headers, it may receive the normal HTML instead.
+
 ## Why I built it
 
 I added Markdown content negotiation to my own JavaScript-rendered site, then wanted to make that setup easy to repeat. The useful part was simple: let the HTTP request choose the format, and serve both versions from the same content.
@@ -41,13 +61,9 @@ Vary: Accept
 
 The same URL returns your existing HTML for a browser. Doorman selects the representation using the `Accept` header. It does not need public `.md` URLs, user-agent sniffing, or `llms.txt`.
 
-## Install
+## Runtime requirements
 
 Requires Node.js 22+ for development. The core uses standard `Request`, `Response`, and `Headers` APIs with no Node imports. Other Fetch runtimes need integration testing on their deployment platform.
-
-```sh
-npm install @heyrtl/doorman
-```
 
 Import the library from `@heyrtl/doorman`. The package includes TypeScript declarations and the agent implementation guide.
 
@@ -93,14 +109,6 @@ There is no crawler, browser automation, AI API, or HTML converter in the librar
 The Markdown can use a structure suited to reading: cards become lists, columns become sections, and decorative UI can disappear. The integration agent works from your repository's content and components to build that view. Requests then run ordinary code against shared content sources.
 
 Keep the substance faithful: preserve facts, qualifications, links, and meaningful relationships. Describe informative visuals from accurate alt text, captions, data, or inspected assets. Keep each view focused on its page; label and document any intentional additions from elsewhere on the site. Sharing sources keeps later edits consistent across both formats.
-
-## Use with a coding agent
-
-Copy [DOORMAN.md](DOORMAN.md) to the website's root, or point your agent at the installed copy:
-
-> Read node_modules/@heyrtl/doorman/DOORMAN.md and implement Doorman for this site. Cover all public content routes, reuse their content sources, and run the tests.
-
-The instructions cover route discovery, framework integration, source parity, deployment, and verification. They don't overwrite your existing `AGENTS.md` or `CLAUDE.md`.
 
 ## Negotiation and caching
 
