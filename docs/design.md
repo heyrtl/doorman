@@ -17,7 +17,7 @@ The library owns HTTP format selection and response construction. The website ow
 
 The core has three exports: `createDoorman`, `prefersMarkdown`, and `mergeVary`. It accepts standard Fetch APIs, includes TypeScript declarations, and has no runtime or development dependencies/build step. A Node demo provides a runnable HTTP boundary. Framework adapters should only be added with integration tests for that framework.
 
-The package is ESM-only and currently unpublished. The scoped name is provisional. No license grant is selected yet (`UNLICENSED`); choose one before promoting it as open source.
+The package is ESM-only and currently unpublished. It uses the owner's npm scope, `@heyrtl/doorman`, and is licensed under MIT. See `docs/publishing.md` for the release procedure.
 
 ## Deliberately deferred
 

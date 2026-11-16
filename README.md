@@ -36,7 +36,7 @@ npm pack
 npm install /path/to/heyrtl-doorman-0.1.0.tgz
 ```
 
-The package import is `@heyrtl/doorman`. The npm registry name is provisional; there is no registry release yet.
+The package import is `@heyrtl/doorman`, using the owner's npm scope. There is no registry release yet. See [publishing instructions](docs/publishing.md) for the first release.
 
 ## Connect your content
 
@@ -113,6 +113,10 @@ The demo has a JavaScript-rendered HTML page and a Markdown response built from 
 This helps readers that request Markdown fetch public content without running its UI JavaScript. It does not force tools to send that header, make inaccessible/private data public, guarantee search indexing/citations, or represent interactive app state automatically. Google says special Markdown files and `llms.txt` are not required for its Search AI features.
 
 The mechanism already exists; Doorman packages it as a small library and an agent implementation workflow. See [the implementation notes](docs/design.md).
+
+## License
+
+[MIT](LICENSE).
 
 ## References
 

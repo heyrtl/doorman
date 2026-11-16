@@ -4,9 +4,19 @@
   "description": "Same URL. HTML for browsers. Markdown for clients that ask for it.",
   "type": "module",
   "engines": { "node": ">=22" },
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "exports": { ".": { "types": "./src/index.d.ts", "import": "./src/index.js" } },
   "files": ["src", "docs", "DOORMAN.md", "README.md"],
   "repository": { "type": "git", "url": "git+https://github.com/heyrtl/doorman.git" },
-  "scripts": { "test": "node --test", "demo": "node examples/server.mjs" },
-  "license": "UNLICENSED"
+  "homepage": "https://github.com/heyrtl/doorman#readme",
+  "bugs": { "url": "https://github.com/heyrtl/doorman/issues" },
+  "keywords": ["markdown", "content-negotiation", "ai-agents", "http", "fetch"],
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node examples/server.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "license": "MIT"
 }
