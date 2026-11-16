@@ -88,6 +88,12 @@ For localized content, set `vary: ['Accept-Language']`, resolve the language fro
 
 There is no crawler, browser automation, AI API, or HTML converter in the library. Markdown/MDX sites can reuse their source. CMS sites can serialize public CMS records. A JavaScript SPA can share its content/data module with a server or a build step. Doorman supplies HTTP negotiation; the agent connects the content.
 
+### A reading view from your source content
+
+The Markdown can use a structure suited to reading: cards become lists, columns become sections, and decorative UI can disappear. The integration agent works from your repository's content and components to build that view. Requests then run ordinary code against shared content sources.
+
+Keep the substance faithful: preserve facts, qualifications, links, and meaningful relationships. Describe informative visuals from accurate alt text, captions, data, or inspected assets. Keep each view focused on its page; label and document any intentional additions from elsewhere on the site. Sharing sources keeps later edits consistent across both formats.
+
 ## Use with a coding agent
 
 Copy [DOORMAN.md](DOORMAN.md) to the website's root, or point your agent at the installed copy:

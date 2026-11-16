@@ -10,9 +10,17 @@ Map each public content route family to its source and a Markdown renderer. Incl
 
 ## 2. Reuse the content
 
+Build a clear, faithful Markdown reading view from the website's source content. Work inside the repository: inspect components, routes, content files, assets, and data models to understand what the page communicates. The Markdown should be organized for reading without requiring the reader to reconstruct the visual layout.
+
 Read the same Markdown/MDX, CMS record, structured object, or data service as the HTML UI. For hardcoded component copy, extract a shared content module used by both renderers. Do not maintain an independent hand-written copy of each page.
 
-Include the page title, meaningful headings, main text, links, lists, tables, image descriptions, and fenced code where applicable. Preserve language, published status, canonical paths, and content order. Use a maintained converter if the source is HTML; remove scripts and styles, and preserve code/tables with relevant tests. Do not treat the SPA's initial HTML shell as rendered content. Do not add an LLM dependency or a browser-per-request scraper.
+You may reorganize headings, flatten columns and cards into sections or lists, expand ambiguous link labels, and omit navigation controls, repeated interface chrome, and decorative elements. Preserve substantive content, facts, qualifications, relationships, language, published status, and canonical paths. Keep a logical reading order, including sequences that carry meaning. Do not invent claims, silently summarize substantive text, or change its meaning. For example, a price described as "from $9/month, billed annually" must retain both qualifications.
+
+Include the page title, meaningful headings, main text, links, lists, tables, and fenced code where applicable. For informative images, charts, and diagrams, use existing accurate alt text, captions, underlying data, or context verified by inspecting the asset. Preserve labels, units, and relevant relationships. Do not invent descriptions for uninspected assets; record missing descriptions as an integration gap. Omit purely decorative visuals.
+
+Keep each reading view scoped to its page by default. An overview may intentionally include related public content, such as project data from another route, but label that section, link to its source page, reuse the same data, and document the decision in the site's integration notes. Do not silently turn every page into a site-wide summary.
+
+The coding agent builds the renderer during integration; requests then use ordinary code and shared data. Use a maintained converter when HTML is the authoritative source, preserving links, code, and tables while removing scripts and styles. Do not treat the SPA's initial HTML shell as rendered content. Do not add an LLM dependency or a browser-per-request scraper.
 
 For browser-only content, move/share the public data access into server-safe code or generate Markdown from the same source at build time. Never copy localStorage data, secrets, private CMS fields, or drafts into public Markdown. If content cannot be obtained outside the browser, state the missing integration instead of fabricating a summary.
 
@@ -42,6 +50,7 @@ Add tests in the website's existing test framework. Test actual integration as w
 - HEAD → correct headers and no body; POST/actions/API/assets → existing behavior.
 - Static page, dynamic page, missing page, trailing slash/redirect behavior, and any supported locales.
 - Shared content edits appear in both representations, including headings, links, code, tables, and image descriptions where present.
+- Reorganized reading views retain substantive details, qualifications, and meaningful relationships; informative visual descriptions have a verified source, and any cross-page additions are labeled and documented.
 - Existing Vary values survive; appropriate language/cache headers are present; private/draft content remains inaccessible.
 - Resolver failures follow the app's error behavior.
 
