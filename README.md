@@ -11,7 +11,7 @@ Install the library, give your coding agent the included instructions, and conne
 Open your website's project in Claude Code, Codex, or another coding agent. Paste this:
 
 ```text
-Implement Doorman in this website and open a pull request with the completed integration.
+Implement Doorman (npm: https://www.npmjs.com/package/@heyrtl/doorman; repository: https://github.com/heyrtl/doorman) in this website and open a pull request with the completed integration.
 
 Read the project's instructions, inspect its stack and content sources, and create a working branch. Install @heyrtl/doorman using the project's package manager, then read node_modules/@heyrtl/doorman/DOORMAN.md and follow it.
 
