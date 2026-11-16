@@ -34,11 +34,7 @@ The agent installs the package, adapts the integration to your stack, and prepar
 curl -H 'Accept: text/markdown' https://example.com/path/to/page
 ```
 
-Replace `https://example.com/path/to/page` with the page's normal URL. Keep the same path and query parameters; no `.md` suffix is needed. For a live example:
-
-```sh
-curl -H 'Accept: text/markdown' https://ratul.fi
-```
+Replace `https://example.com/path/to/page` with the page's normal URL. Keep the same path and query parameters; no `.md` suffix is needed.
 
 ## Why I built it
 
