@@ -1,8 +1,32 @@
 # Doorman
 
-Same URL. HTML for browsers. Markdown for clients that ask for it.
+**HTML for humans. Markdown for agents.**
 
-Doorman is a small, dependency-free JavaScript library that serves Markdown when a request explicitly accepts `text/markdown`. It includes instructions for a coding agent to connect it to your website's content sources, including sites whose pages render in JavaScript.
+Your website already has the content. Doorman helps serve it in the format the reader needs, at the same URL.
+
+Install the library, give your coding agent the included instructions, and connect your public pages to their content sources. Browsers keep getting your website. Agents that request `text/markdown` get structured text they can read without running the page's JavaScript.
+
+## Why I built it
+
+I added Markdown content negotiation to my own JavaScript-rendered site, then wanted to make that setup easy to repeat. The useful part was simple: let the HTTP request choose the format, and serve both versions from the same content.
+
+Doorman turns that approach into a small, dependency-free library and an implementation guide for coding agents. The library handles the HTTP details; your agent connects it to your site's routes and content.
+
+## Who it's for
+
+Doorman is for developers and site owners building documentation, blogs, portfolios, and other public content sites, especially when their pages rely on JavaScript. It helps agent web tools retrieve the actual page content without having to render the UI.
+
+Use it with a coding agent that can edit your project. The included guide walks the agent through finding content sources, covering public routes, and testing the integration. Readers only need an HTTP client that requests Markdown.
+
+## Why this approach
+
+HTTP content negotiation lets one URL serve multiple representations of the same content. Your existing links stay useful, and the Markdown can stay in sync by sharing its source with the HTML version. There is no AI API or browser-rendering service to run.
+
+[Vercel uses this pattern for pages including its blog and changelog](https://vercel.com/blog/making-agent-friendly-pages-with-content-negotiation), and [Cloudflare offers Markdown for Agents using the same `Accept: text/markdown` mechanism](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/). Doorman brings that established pattern into your application's own code, with control over which content it serves.
+
+## How it works
+
+The client asks for Markdown at the page's normal URL:
 
 ```http
 GET /blog/hello
@@ -15,30 +39,21 @@ Vary: Accept
 # Hello
 ```
 
-The same URL returns your existing HTML for a browser. No public `.md` URLs, user-agent sniffing, or `llms.txt` required.
+The same URL returns your existing HTML for a browser. Doorman selects the representation using the `Accept` header. It does not need public `.md` URLs, user-agent sniffing, or `llms.txt`.
 
 ## Install
 
 Requires Node.js 22+ for development. The core uses standard `Request`, `Response`, and `Headers` APIs with no Node imports. Other Fetch runtimes need integration testing on their deployment platform.
 
-This is an unpublished v0.1 package. Install from GitHub:
-
 ```sh
-npm install github:heyrtl/doorman
+npm install @heyrtl/doorman
 ```
 
-Or build and install a local archive:
-
-```sh
-# In the Doorman checkout
-npm pack
-# In your website (replace the path)
-npm install /path/to/heyrtl-doorman-0.1.0.tgz
-```
-
-The package import is `@heyrtl/doorman`, using the owner's npm scope. There is no registry release yet. See [publishing instructions](docs/publishing.md) for the first release.
+Import the library from `@heyrtl/doorman`. The package includes TypeScript declarations and the agent implementation guide.
 
 ## Connect your content
+
+Wrap your existing Fetch-style handler and provide a function that finds the page's public content. In this integration sketch, `publicContent` and `existingAppHandler` stand for your site's content source and request handler:
 
 ```js
 import { createDoorman } from '@heyrtl/doorman';
@@ -60,6 +75,14 @@ export default function fetch(request) {
 ```
 
 `resolve(request)` returns `{ markdown, status?, headers? }` or `null` to continue through your existing app. It may be asynchronous. It only runs for GET/HEAD requests that prefer Markdown. Errors propagate to the host application's error handler. Use body-bearing statuses such as 200 or 404; this API does not generate redirects, 204s, or 304s.
+
+The package exports three functions:
+
+| Export | Purpose |
+| --- | --- |
+| `createDoorman({ resolve, vary? })` | Wrap a Fetch-style handler with Markdown negotiation. |
+| `prefersMarkdown(accept)` | Check whether the request prefers Markdown under Doorman's policy. |
+| `mergeVary(headers, ...dimensions)` | Add cache variation headers while preserving existing values. |
 
 For localized content, set `vary: ['Accept-Language']`, resolve the language from the request, and return a matching `Content-Language` header. If locale comes from cookies, follow the site's cookie/private caching policy instead.
 
@@ -93,7 +116,11 @@ A static file host cannot run this library by itself. It needs a host-level rewr
 
 ## Try it
 
+Clone the repository to run the tests and demo:
+
 ```sh
+git clone https://github.com/heyrtl/doorman.git
+cd doorman
 npm test
 npm run demo
 ```
@@ -112,7 +139,7 @@ The demo has a JavaScript-rendered HTML page and a Markdown response built from 
 
 This helps readers that request Markdown fetch public content without running its UI JavaScript. It does not force tools to send that header, make inaccessible/private data public, guarantee search indexing/citations, or represent interactive app state automatically. Google says special Markdown files and `llms.txt` are not required for its Search AI features.
 
-The mechanism already exists; Doorman packages it as a small library and an agent implementation workflow. See [the implementation notes](docs/design.md).
+The mechanism already exists; Doorman packages it as a small library and an agent implementation workflow.
 
 ## License
 

@@ -7,7 +7,7 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": { ".": { "types": "./src/index.d.ts", "import": "./src/index.js" } },
-  "files": ["src", "docs", "DOORMAN.md", "README.md"],
+  "files": ["src", "DOORMAN.md", "README.md"],
   "repository": { "type": "git", "url": "git+https://github.com/heyrtl/doorman.git" },
   "homepage": "https://github.com/heyrtl/doorman#readme",
   "bugs": { "url": "https://github.com/heyrtl/doorman/issues" },

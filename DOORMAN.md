@@ -18,7 +18,7 @@ For browser-only content, move/share the public data access into server-safe cod
 
 ## 3. Wire negotiation into the host
 
-Install the package using the README's GitHub or local archive instructions until it has a registry release. Import `createDoorman` from `@heyrtl/doorman` and provide an explicit public-route resolver. Return `{ markdown, status?, headers? }`, or `null` to fall through. Keep the original request URL, query semantics, redirects, and missing-page behavior.
+Install the package with `npm install @heyrtl/doorman`. Import `createDoorman` from `@heyrtl/doorman` and provide an explicit public-route resolver. Return `{ markdown, status?, headers? }`, or `null` to fall through. Keep the original request URL, query semantics, redirects, and missing-page behavior.
 
 Wrap the existing Fetch handler where possible. In Next.js, consult that version's proxy/middleware docs and preserve the existing proxy's behavior. `NextResponse.next()` can supply the fallback, but verify the FINAL response headers: framework internals may append or replace headers after the proxy. Do not replace existing auth, routing, or locale logic. A static export needs host-level request negotiation or a function/server; a static Markdown file alone does not implement this.
 
