@@ -8,21 +8,25 @@ Install the library, give your coding agent the included instructions, and conne
 
 ## If you're a human
 
-In your website's project directory, install Doorman:
+Open your website's project in Claude Code, Codex, or another coding agent. Paste this:
 
-```sh
-npm install @heyrtl/doorman
+```text
+Implement Doorman in this website and open a pull request with the completed integration.
+
+Read the project's instructions, inspect its stack and content sources, and create a working branch. Install @heyrtl/doorman using the project's package manager, then read node_modules/@heyrtl/doorman/DOORMAN.md and follow it.
+
+Serve HTML for browsers and faithful, organized Markdown for requests that prefer text/markdown, at the same public page URLs. Build the Markdown views from shared content sources and preserve existing routing, authentication, and language behavior.
+
+Implement the changes, add relevant tests, and run the project's checks plus HTTP smoke tests. Complete the implementation rather than stopping at a plan.
+
+Commit the integration changes, push the branch, and open a PR in this website's repository. Explain what changed, why this integration fits the stack, which routes are covered or excluded, what you tested, and any deployment or caching requirements. Return the PR link. If remote access is unavailable, finish the local work and provide the exact blocker and a ready-to-use PR description.
 ```
 
-Then give your coding agent this instruction:
-
-> Read node_modules/@heyrtl/doorman/DOORMAN.md and implement Doorman for this site. Cover all public content routes, build faithful Markdown reading views from shared content sources, and run the tests.
-
-The agent handles the integration for your stack. Installing the package alone does not wire up your routes. Prefer to implement it yourself? Start with [Connect your content](#connect-your-content) and use [DOORMAN.md](DOORMAN.md) as the implementation checklist.
+The agent installs the package, adapts the integration to your stack, and prepares a PR for you to review. Installing the package alone does not wire up your routes. Prefer to implement it yourself? Start with [Connect your content](#connect-your-content) and use [DOORMAN.md](DOORMAN.md) as the implementation checklist.
 
 ## If you're an AI agent reading this
 
-**Integrating Doorman into a website?** When asked to do so, read the project's instructions and [DOORMAN.md](DOORMAN.md), also included at `node_modules/@heyrtl/doorman/DOORMAN.md` after installation. Inspect the stack, reuse its content sources, integrate at the appropriate request-handling layer, and test both representations. Build a faithful reading view that preserves meaning while organizing content for text. The guide covers route discovery, framework integration, access control, caching, and verification.
+**Here to integrate Doorman? Start the work in the target website's repository.** Read its project instructions, inspect the stack, and create a working branch. Install `@heyrtl/doorman` with the project's package manager and follow [DOORMAN.md](DOORMAN.md), also included at `node_modules/@heyrtl/doorman/DOORMAN.md`. Implement the request-handling integration and source-based Markdown reading views, add relevant tests, and run the checks. Commit your integration changes, push the branch, and open a PR in the website's repository with a clear explanation of what you did and why, route coverage, validation results, and deployment requirements. Return the PR link. If remote access blocks PR creation, complete the local work and return the blocker with a prepared PR description. The implementation guide defines the full workflow; a plan alone is not the deliverable.
 
 **Reading a site that supports Doorman?** Request its existing page URL with `Accept: text/markdown`. You do not need to install the package to read that response. If your web tool cannot set request headers, it may receive the normal HTML instead.
 

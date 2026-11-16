@@ -1,10 +1,12 @@
 # Implement Doorman in this website
 
-Use `@heyrtl/doorman` to serve a faithful Markdown representation of public content at its existing URL when the request prefers `text/markdown`. Keep the website's normal HTML experience. Complete the implementation and verification, rather than only suggesting changes.
+Use `@heyrtl/doorman` to serve a faithful Markdown representation of public content at its existing URL when the request prefers `text/markdown`. Keep the website's normal HTML experience. Complete the implementation and verification, then open a pull request in the target website's repository explaining the changes and their purpose. A plan alone is not the deliverable.
 
 ## 1. Inspect the project
 
 Read the project's instructions and installed framework docs. Identify the framework/version, server entry point, deployment host, public routes (including dynamic routes), redirects, locale handling, authentication boundaries, and content sources. Check for existing negotiation before adding another layer.
+
+Inspect Git status and the repository's contribution conventions. Create a working branch from the appropriate base while preserving existing user changes. Keep commits focused on the integration and avoid including unrelated work.
 
 Map each public content route family to its source and a Markdown renderer. Include at least one concrete dynamic route per family. Classify excluded routes such as APIs, assets, admin pages, authenticated pages, and interactive experiences without a meaningful text equivalent. Record coverage and exclusions in the website's docs; do not claim the entire site is covered if it isn't.
 
@@ -26,7 +28,7 @@ For browser-only content, move/share the public data access into server-safe cod
 
 ## 3. Wire negotiation into the host
 
-Install the package with `npm install @heyrtl/doorman`. Import `createDoorman` from `@heyrtl/doorman` and provide an explicit public-route resolver. Return `{ markdown, status?, headers? }`, or `null` to fall through. Keep the original request URL, query semantics, redirects, and missing-page behavior.
+Install `@heyrtl/doorman` using the project's package manager (for npm, `npm install @heyrtl/doorman`). Import `createDoorman` from `@heyrtl/doorman` and provide an explicit public-route resolver. Return `{ markdown, status?, headers? }`, or `null` to fall through. Keep the original request URL, query semantics, redirects, and missing-page behavior.
 
 Wrap the existing Fetch handler where possible. In Next.js, consult that version's proxy/middleware docs and preserve the existing proxy's behavior. `NextResponse.next()` can supply the fallback, but verify the FINAL response headers: framework internals may append or replace headers after the proxy. Do not replace existing auth, routing, or locale logic. A static export needs host-level request negotiation or a function/server; a static Markdown file alone does not implement this.
 
@@ -57,3 +59,17 @@ Add tests in the website's existing test framework. Test actual integration as w
 Run relevant checks and a local HTTP smoke test. After an authorized deployment, test HTML → Markdown → HTML and Markdown → HTML → Markdown through the CDN, checking body AND headers. Local tests alone do not establish deployed cache correctness.
 
 Report files changed, route coverage/exclusions, tests run, and unresolved deployment requirements. Do not promise every AI tool will request Markdown or improved search rankings. No Docker is needed when integrating with an existing runtime; propose one only if the project actually needs a standalone server.
+
+## 6. Open a pull request
+
+Review the diff, commit the integration changes, push the working branch, and open a pull request against the appropriate base branch of the target website's repository. Follow its PR template and contribution conventions. This is a PR for the website being integrated, not for the Doorman library. Leave merging and deployment to the project's normal review process unless separately requested.
+
+Use a concrete title that describes the resulting behavior. The description must explain:
+
+- What changed: the request-handling integration, shared content sources, and Markdown reading views.
+- Why: the problem being solved and why the chosen integration fits this stack and hosting setup.
+- Coverage: public routes and locales supported, intentional exclusions, and any labeled cross-page additions.
+- Validation: checks actually run, their results, and reproducible HTTP examples for HTML and Markdown at the same URL. Distinguish local checks from deployed CDN verification.
+- Remaining requirements: cache configuration, hosting changes, or known limitations that need attention before rollout.
+
+Return the PR URL and a concise implementation summary. If Git hosting authentication, permissions, or a missing remote prevents pushing or opening the PR, finish all unblocked local work, report the specific blocker, and provide a ready-to-use PR title and description. Do not claim a PR or deployment exists unless it was successfully created.
