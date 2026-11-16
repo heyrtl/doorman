@@ -38,6 +38,8 @@ Replace `https://example.com/path/to/page` with the page's normal URL. Keep the 
 
 ## Why I built it
 
+Credit to [Zeno Rocha](https://github.com/zenorocha): his post about serving Markdown on Resend was the first example of this approach I saw.
+
 I added Markdown content negotiation to my own JavaScript-rendered site, then wanted to make that setup easy to repeat. The useful part was simple: let the HTTP request choose the format, and serve both versions from the same content.
 
 Doorman turns that approach into a small, dependency-free library and an implementation guide for coding agents. The library handles the HTTP details; your agent connects it to your site's routes and content.
