@@ -1,0 +1,58 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - .github/workflows/publish.yml
+      - scripts/check-release.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      # No install/build step: this package has no dependencies or build output.
+      - run: npm test
+      - run: npm pack --dry-run
+
+  publish:
+    needs: test
+    if: github.repository == 'heyrtl/doorman' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+      # npm >=11.5.1 supports trusted publishing. Use current npm 11 fixes.
+      - run: npm install --global npm@11
+      - name: Check whether this version needs publishing
+        id: release
+        run: node scripts/check-release.mjs
+      # npm's prepublishOnly hook also runs the tests before uploading.
+      # Authentication uses GitHub OIDC; no NPM_TOKEN secret is needed.
+      - name: Publish to npm
+        if: steps.release.outputs.publish == 'true'
+        run: npm publish

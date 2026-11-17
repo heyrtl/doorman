@@ -1,44 +1,54 @@
 # Releasing Doorman
 
-This guide is for maintainers publishing `@heyrtl/doorman`. Users can install the library with `npm install @heyrtl/doorman`; publishing is not part of website integration.
+Doorman publishes through GitHub Actions using npm trusted publishing (OIDC). No npm token is stored in GitHub. The workflow is `.github/workflows/publish.yml`.
 
-## Prepare a release
+## One-time npm setup
 
-Use Node.js 22+ and a current npm CLI. Start from an up-to-date, clean checkout of `main`, and review the changes since the previous release. Choose a new version using semantic versioning: patches for compatible fixes, minor versions for compatible additions, and major versions for breaking changes. While the package is below 1.0, describe API compatibility changes explicitly in release notes.
+In the npm package's Trusted Publisher settings, create this connection:
 
-Update `package.json` to the new version, commit the change, and run:
+| Field | Value |
+| --- | --- |
+| Publisher | GitHub Actions |
+| Label | Doorman GitHub Actions (optional) |
+| Organization or user | `heyrtl` |
+| Repository | `doorman` |
+| Workflow filename | `publish.yml` |
+| Environment name | Leave empty |
+| Allow npm publish | Checked |
+| Allow npm dist-tag | Unchecked |
+
+Enter the workflow filename only, without `.github/workflows/`. Save the connection. Complete the first successful publish within two days of creating it; npm expires an unvalidated connection after that window. If it expires, delete and recreate it.
+
+## Ship a release
+
+Choose the next stable version using semantic versioning, then update it without creating a local Git tag:
 
 ```sh
-npm test
-npm publish --dry-run
+npm version patch --no-git-tag-version
 ```
 
-Review the package name, version, license, public visibility, and file list. The npm archive should contain only the library, TypeScript declarations, README, agent instructions, package metadata, and MIT license. Maintainer documentation, internal design notes, examples, tests, and CI configuration are excluded from the npm archive.
+Use `minor` or `major` instead when the change warrants it. Commit the version change along with the release's changes and push or merge to `main`. Published versions cannot be overwritten.
 
-## Publish
+A push that changes `package.json` triggers the Publish workflow. It:
 
-Publishing requires an npm account with access to the `@heyrtl/doorman` package. Authenticate through npm's browser login when publishing from a terminal:
+1. Runs the tests and checks package contents on Node 22 and 24.
+2. Checks npm to see whether that exact version already exists. Existing versions are skipped, making reruns safe. Registry failures stop the release, and an older unpublished version cannot replace a newer `latest` version.
+3. Publishes an unpublished stable version through OIDC after the checks pass. npm also runs the `prepublishOnly` test hook before upload. npm generates provenance for this public package and repository.
 
-```sh
-npm login --registry https://registry.npmjs.org/ --auth-type=web
-npm whoami --registry https://registry.npmjs.org/
-npm publish
-```
+Source or documentation commits without a version bump are not releases. The workflow does not choose a version or create commits automatically. Prerelease versions need a separate release policy and are rejected by this workflow.
 
-Complete npm's browser or two-factor verification when prompted. Credentials belong in npm's authentication configuration, never in the repository. The package sets public access and the official registry in `publishConfig`, and its `prepublishOnly` hook runs the tests. A dry run does not upload or reserve a version.
+## Verify or retry
 
-## Verify the release
-
-Check that npm reports the intended version:
+Follow the [Publish workflow](https://github.com/heyrtl/doorman/actions/workflows/publish.yml) to completion. Check the published version with:
 
 ```sh
 npm view @heyrtl/doorman version
 ```
 
-Install that exact version in a fresh project and verify the exports, types, and bundled `DOORMAN.md`. After publication succeeds, tag the release commit as `v<version>`, push the tag, and create release notes. Published versions cannot be overwritten; corrections require a new version.
+Verify a fresh installation of the released version. npm's public metadata and download endpoints may take a few minutes to catch up after publication. After success, tag the release commit as `v<version>` and push the tag if a Git release tag is wanted; tags do not trigger publication.
 
-## Automated releases
+If a run fails, fix the issue and rerun it from GitHub Actions, or select Run workflow on `main`. A version already published is skipped. A failed registry check does not authorize publishing. No browser approval should be needed for routine releases after the trusted publisher is configured correctly.
 
-For CI-based releases, use [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) with GitHub Actions. Configure the publisher in the npm package settings and use the repository's release process. Trusted publishing uses short-lived credentials and supports provenance without storing a long-lived npm token. This repository currently tests changes in CI but does not publish automatically.
+The npm archive contains the library, types, README, agent instructions, package metadata, and MIT license. Release scripts, maintainer docs, tests, and workflow files stay in GitHub.
 
-See [npm's public scoped package guide](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/) and [publish command reference](https://docs.npmjs.com/commands/npm-publish/).
+See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for configuration and troubleshooting. The repository URL in `package.json` must continue to match this GitHub repository.
