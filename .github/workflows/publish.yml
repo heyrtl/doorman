@@ -1,4 +1,4 @@
-name: Publish
+name: Stage npm release
 
 on:
   push:
@@ -46,13 +46,13 @@ jobs:
           node-version: '24'
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
-      # npm >=11.5.1 supports trusted publishing. Use current npm 11 fixes.
-      - run: npm install --global npm@11
+      # Staged publishing requires npm >=11.15.0.
+      - run: npm install --global 'npm@^11.15.0'
       - name: Check whether this version needs publishing
         id: release
         run: node scripts/check-release.mjs
-      # npm's prepublishOnly hook also runs the tests before uploading.
       # Authentication uses GitHub OIDC; no NPM_TOKEN secret is needed.
-      - name: Publish to npm
+      # npm requires a maintainer's separate approval before this goes live.
+      - name: Stage package on npm
         if: steps.release.outputs.publish == 'true'
-        run: npm publish
+        run: npm stage publish

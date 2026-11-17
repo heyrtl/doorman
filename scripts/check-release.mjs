@@ -40,7 +40,7 @@ export async function shouldPublish({ name, version }, fetcher = fetch) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
   const publish = await shouldPublish(pkg);
-  console.log(`${pkg.name}@${pkg.version}: ${publish ? 'ready to publish' : 'already published; skipping'}`);
+  console.log(`${pkg.name}@${pkg.version}: ${publish ? 'ready to stage' : 'already published; skipping'}`);
   if (process.env.GITHUB_OUTPUT) {
     await appendFile(process.env.GITHUB_OUTPUT, `publish=${publish}\n`);
   }
