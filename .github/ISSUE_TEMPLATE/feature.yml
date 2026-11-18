@@ -1,0 +1,17 @@
+name: Feature request
+description: Suggest a workflow improvement or framework integration.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the site, framework, and hosting setup if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would a successful result look like?
+    validations:
+      required: true
