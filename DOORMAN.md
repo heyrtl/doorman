@@ -58,7 +58,14 @@ Add tests in the website's existing test framework. Test actual integration as w
 - Existing Vary values survive; appropriate language/cache headers are present; private/draft content remains inaccessible.
 - Resolver failures follow the app's error behavior.
 
-Run relevant checks and a local HTTP smoke test. After an authorized deployment, test HTML → Markdown → HTML and Markdown → HTML → Markdown through the CDN, checking body AND headers. Local tests alone do not establish deployed cache correctness.
+Run the project's tests and use Doorman's CLI for a local HTTP smoke test. Replace the URL and expected text with one of the site's real routes and a stable phrase from its Markdown:
+
+```sh
+npm exec -- doorman check http://localhost:3000/docs/getting-started \
+  --expect 'Getting started' --json
+```
+
+The checker requests both formats at the same URL and checks status, content type, cache headers, and optional text. Use `--expect-html` to assert text in the raw HTML response too. For a client-rendered page, assert a stable HTML marker and check the rendered content separately in the browser. Run the same command against the deployed URL after an authorized deployment. Test redirects, missing pages, permissions, and request methods separately using the checks above.
 
 Report files changed, route coverage/exclusions, tests run, and unresolved deployment requirements. Do not promise every AI tool will request Markdown or improved search rankings. No Docker is needed when integrating with an existing runtime; propose one only if the project actually needs a standalone server.
 
