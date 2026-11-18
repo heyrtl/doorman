@@ -28,7 +28,7 @@ test('real HTTP: HTML and Markdown share a URL, HEAD and fallthrough work', asyn
     if (accept === 'text/markdown') {
       assert.equal(response.headers.get('content-type'), 'text/markdown; charset=utf-8');
       assert.match(body, /^# Hello from Doorman/);
-      assert.doesNotMatch(body, /<script>/);
+      assert.doesNotMatch(body, /<script\b/i);
     } else {
       assert.match(response.headers.get('content-type'), /^text\/html/);
       assert.match(body, /<main id="content"><\/main><script>/);
