@@ -42,6 +42,8 @@ Keep Markdown's default `no-store` until representation separation is verified. 
 
 Use representation-specific validators if enabling conditional caching. Do not reuse HTML ETags, Content-Length, Content-Encoding, or digest headers for Markdown. Content source failures must follow the host's error policy; do not silently turn a failed fetch into a successful empty page.
 
+For Next.js App Router, see the [production-tested example](https://github.com/heyrtl/doorman/tree/main/examples/nextjs). If the framework or host drops `Vary: Accept` on the final response, either configure the cache to distinguish the representations and preserve the header, or disable caching on both representations with `Cache-Control: no-store`. Confirm the result against the deployed URL.
+
 ## 5. Test and report
 
 Add tests in the website's existing test framework. Test actual integration as well as helpers:

@@ -45,6 +45,7 @@ export async function checkSite(input, { expect, expectHtml, fetcher = fetch } =
       check.status = response.status;
       check.contentType = response.headers.get('content-type');
       check.vary = response.headers.get('vary');
+      check.cacheControl = response.headers.get('cache-control');
       if (response.status !== 200) {
         errors.push(response.status >= 300 && response.status < 400
           ? `HTTP ${response.status} redirect. Check the final page URL directly.`
@@ -53,7 +54,10 @@ export async function checkSite(input, { expect, expectHtml, fetcher = fetch } =
       const mediaType = check.contentType?.split(';')[0].trim().toLowerCase();
       if (mediaType !== formats[format]) errors.push(`Expected Content-Type: ${formats[format]}.`);
       const vary = check.vary?.toLowerCase().split(',').map((value) => value.trim()) ?? [];
-      if (!vary.includes('accept') && !vary.includes('*')) errors.push('Expected Vary to include Accept or *.');
+      const noStore = check.cacheControl?.toLowerCase().split(',').some((value) => value.trim() === 'no-store');
+      if (!vary.includes('accept') && !vary.includes('*') && !noStore) {
+        errors.push('Expected Vary to include Accept or *, or Cache-Control: no-store.');
+      }
 
       if (errors.length) {
         await response.body?.cancel();
