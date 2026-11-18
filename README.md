@@ -8,6 +8,8 @@ Install the library, give your coding agent the included instructions, and conne
 
 ## Try the live demo
 
+![Terminal demo showing the same guide URL returning text/html and a readable text/markdown response.](docs/media/content-negotiation.gif)
+
 Open the [Next.js guide](https://doorman-demo-dun.vercel.app/docs/getting-started) in a browser or request both formats at the same URL:
 
 ```sh
