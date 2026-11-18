@@ -8,7 +8,7 @@ Install the library, give your coding agent the included instructions, and conne
 
 ## Try the live demo
 
-![Terminal demo showing the same guide URL returning text/html and a readable text/markdown response.](docs/media/content-negotiation.gif)
+![Terminal demo showing the same guide URL returning text/html and a readable text/markdown response.](https://raw.githubusercontent.com/heyrtl/doorman/main/docs/media/content-negotiation.gif)
 
 Open the [Next.js guide](https://doorman-demo-dun.vercel.app/docs/getting-started) in a browser or request both formats at the same URL:
 
@@ -156,7 +156,7 @@ The resolver runs before the HTML handler. Keep authentication/authorization in 
 
 ## Where it runs
 
-Use Doorman inside an existing server, serverless function, or edge handler that supports Fetch APIs. In Next.js it can wrap the request in a proxy/middleware, with `NextResponse.next()` as the fallback; check the installed version and verify final response headers after deployment. This repository currently tests the core and a Node HTTP integration, not every framework adapter.
+Use Doorman inside an existing server, serverless function, or edge handler that supports Fetch APIs. The [Next.js App Router example](https://github.com/heyrtl/doorman/tree/main/examples/nextjs) uses Proxy with `NextResponse.next()` as the fallback. CI builds and runs it in production mode, and the live demo exercises the same integration on Vercel. Use the Fetch handler example above to adapt Doorman to other stacks.
 
 A static file host cannot run this library by itself. It needs a host-level rewrite/function or a server. We don't ship Docker in v1: there is no separate Doorman service to deploy. A container would only be useful if you choose to run your website's server that way.
 
