@@ -161,6 +161,16 @@ curl -I -H 'Accept: text/markdown' http://localhost:3000/
 
 The demo has a JavaScript-rendered HTML page and a Markdown response built from the same data. Tests cover negotiation, fallthrough, headers, HEAD, errors, and actual HTTP requests.
 
+## Check a site
+
+Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, headers, and nonempty bodies, and reports any unexpected redirects. `--expect` checks for a literal phrase in the first 1 MiB of each Markdown response.
+
+```sh
+node bin/doorman.js check http://localhost:3000/ --expect 'Hello from Doorman'
+```
+
+The CLI ships alongside the runtime and guide in packages built from this source. To use an installed copy, run `npx doorman check <url>` from a project with Doorman installed. Add `--json` for CI. The exit code is `0` when all checks pass, `1` for failed response checks, and `2` for invalid input. These checks cover the URL and responses tested. Repeat them against your deployed host to exercise its caching behavior.
+
 ## Scope
 
 This helps readers that request Markdown fetch public content without running its UI JavaScript. It does not force tools to send that header, make inaccessible/private data public, guarantee search indexing/citations, or represent interactive app state automatically. Google says special Markdown files and `llms.txt` are not required for its Search AI features.
