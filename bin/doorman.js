@@ -2,13 +2,14 @@
 import { parseArgs } from 'node:util';
 import { checkSite } from '../src/check.js';
 
-const usage = 'Usage: doorman check <url> [--expect <text>] [--json]';
+const usage = 'Usage: doorman check <url> [--expect <markdown text>] [--expect-html <html text>] [--json]';
 
 try {
   const { positionals, values } = parseArgs({
     allowPositionals: true,
     options: {
       expect: { type: 'string' },
+      'expect-html': { type: 'string' },
       json: { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
@@ -17,8 +18,10 @@ try {
     console.log(usage);
   } else {
     const [command, url] = positionals;
-    if (command !== 'check' || !url || positionals.length !== 2 || values.expect === '') throw new Error(usage);
-    const report = await checkSite(url, { expect: values.expect });
+    if (command !== 'check' || !url || positionals.length !== 2 || values.expect === '' || values['expect-html'] === '') {
+      throw new Error(usage);
+    }
+    const report = await checkSite(url, { expect: values.expect, expectHtml: values['expect-html'] });
     if (values.json) {
       console.log(JSON.stringify(report, null, 2));
     } else {

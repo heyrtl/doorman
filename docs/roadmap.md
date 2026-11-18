@@ -1,21 +1,17 @@
 # Doorman roadmap
 
-Doorman helps people make websites readable by agents from the application's own content sources. The npm package provides the HTTP runtime and the implementation guide. The CLI builds on both and will verify and eventually help produce the integration. Sites can use the runtime on its own. Model credentials will be used only during assisted setup.
+The npm package serves HTML and Markdown from the same URL. The CLI verifies that contract and will help install it. The implementation guide stays with the package so people and coding agents can use the same workflow. Model credentials, where supported, are for assisted setup. Serving responses and checking a site use ordinary code.
 
-## In progress
+| Version goal | What ships together | Ready when |
+| --- | --- | --- |
+| **0.1.4 · Verify a site** | An installable `doorman check` command, HTML and Markdown response checks, optional content assertions, JSON and CI exit codes, and a runnable demo. | A clean install exposes the CLI. The demo passes, missing content fails, and the checker catches a server returning HTML to Markdown requests. The README shows how to run it locally and in CI. |
+| **0.1.5 · Integrate Next.js** | A tested App Router integration, a fixture with a dynamic route backed by shared public data, and stack-specific guidance for the runtime package. | A production build passes the checker for static and dynamic pages. Tests also cover redirects and protected routes. Run the same checks at a preview URL before release. |
+| **0.2.0 · Generate a Next.js integration** | A local setup command, one coding-agent runner using supported local auth, route coverage output, and a reviewable, tested diff. | It produces a working patch in a real Next.js site beyond the fixture. Unsupported layouts are reported clearly. The generated site can serve both formats without model credentials. |
+| **0.2.1 · Support React/Vite on one host** | A Vite build-time content export, one host adapter for same-URL negotiation, and a working deployment example. | A real deployment passes the checker, including a client-routed page and a missing page. Hosts without a request handler get a clear compatibility result. |
+| **0.3.0 · Support WordPress** | A WordPress integration for public posts and pages, plus the same npm CLI for verification across stacks. | A test site serves published content with both formats at the same URL. Drafts and password-protected content remain protected. |
 
-- [x] Add `doorman check` to the npm package. Probe both representations at the same URL and optionally assert literal Markdown text. Produce JSON for CI and future integration tools.
-- [ ] Use the checker against a real deployed site and a Next.js preview. Capture both responses for a dynamic route whose content loads in the browser.
-- [ ] Build a Next.js App Router fixture and adapter. Reuse the site's public content loader and preserve redirects, authorization, and existing middleware. Verify actual production build behavior.
-
-## Next
-
-- [ ] Prototype a local integration command for Next.js with one supported coding agent. Start from the implementation guide, detect the project and host, propose public routes, make a reviewable diff, and run the checker. Use existing local agent authentication where supported. Add bring-your-own-key support after proving the workflow.
-- [ ] Support React/Vite on one host with build-time Markdown and a host function for negotiation. Treat static-only hosting as an explicit constraint and report it before making changes.
-- [ ] Prototype WordPress support using published posts and pages. Evaluate Laravel separately once there is a real target project. Reuse the CLI's HTTP expectations across stacks.
-- [ ] Add discovery checks for canonical links and sitemaps, then let teams run their route checks in preview and production CI.
-- [ ] Evaluate a GitHub App that creates draft PRs once the local workflow is useful across real projects. Explore read-only tools such as docs search after discovery and reading work reliably.
+Later candidates include discovery checks for sitemaps and canonical links, another agent runner or bring-your-own-key setup, a GitHub App that opens draft PRs, and read-only tools such as docs search. Revisit Laravel when there is a real target app. Versions after `0.1.4` are targets and can move as integrations are validated.
 
 ## Release practice
 
-Develop on feature branches and use draft PRs for review. Keep release-ready changes together and bump the npm version deliberately when merging a release to `main`. A version already published is skipped by the release workflow. A new stable version on `main` is staged on npm after checks pass. Maintainer approval makes it public, after which it syncs to GitHub Packages and Releases. See [the publishing guide](publishing.md).
+Develop on feature branches. Merge a version bump to `main` when the release's acceptance criteria pass. The workflow stages new versions after CI passes, and a maintainer approves them in npm before they go public. Approved versions then sync to GitHub Packages and Releases. See [the publishing guide](publishing.md).

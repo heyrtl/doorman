@@ -163,13 +163,21 @@ The demo has a JavaScript-rendered HTML page and a Markdown response built from 
 
 ## Check a site
 
-Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, headers, and nonempty bodies, and reports any unexpected redirects. `--expect` checks for a literal phrase in the first 1 MiB of each Markdown response.
+Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, headers, and nonempty bodies, and reports any unexpected redirects. Use `--expect` for a literal Markdown phrase and `--expect-html` for a literal HTML phrase. Each check samples the first 1 MiB of the response.
 
 ```sh
-node bin/doorman.js check http://localhost:3000/ --expect 'Hello from Doorman'
+node bin/doorman.js check http://localhost:3000/ \
+  --expect '# Hello from Doorman' --expect-html '<main id="content">'
 ```
 
-The CLI ships alongside the runtime and guide in packages built from this source. To use an installed copy, run `npx doorman check <url>` from a project with Doorman installed. Add `--json` for CI. The exit code is `0` when all checks pass, `1` for failed response checks, and `2` for invalid input. These checks cover the URL and responses tested. Repeat them against your deployed host to exercise its caching behavior.
+The CLI ships alongside the runtime and guide starting with `0.1.4`. With Doorman installed in your project, add a step like this to CI after your preview is ready:
+
+```sh
+npm exec -- doorman check "$PREVIEW_URL/docs/getting-started" \
+  --expect 'Getting started' --json
+```
+
+Run the command for each route you want to verify. The exit code is `0` when all checks pass, `1` for failed response checks, and `2` for invalid input. Checking a deployed URL exercises the host's caching behavior for those requests. Content assertions are literal checks, so choose a phrase that should survive future edits.
 
 ## Scope
 

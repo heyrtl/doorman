@@ -24,7 +24,7 @@ async function readSample(response) {
   }
 }
 
-export async function checkSite(input, { expect, fetcher = fetch } = {}) {
+export async function checkSite(input, { expect, expectHtml, fetcher = fetch } = {}) {
   const target = new URL(input);
   if (!['https:', 'http:'].includes(target.protocol) || target.username || target.password || target.hash) {
     throw new Error('Provide an HTTP(S) page URL without credentials or a fragment.');
@@ -61,8 +61,10 @@ export async function checkSite(input, { expect, fetcher = fetch } = {}) {
       }
       const { body, truncated } = await readSample(response);
       if (!body.trim()) errors.push(truncated ? 'The first 1 MiB has no visible text.' : 'Response body is empty.');
-      if (expect && format === 'markdown' && !body.includes(expect)) {
-        errors.push(truncated ? 'Expected text was not found in the first 1 MiB of Markdown.' : 'Expected text was not found in the Markdown.');
+      const expectedText = format === 'markdown' ? expect : expectHtml;
+      if (expectedText && !body.includes(expectedText)) {
+        const label = format === 'markdown' ? 'Markdown' : 'HTML';
+        errors.push(`Expected text was not found in the ${truncated ? 'first 1 MiB of ' : ''}${label}.`);
       }
     } catch (error) {
       errors.push(`Request failed: ${error.message}`);
