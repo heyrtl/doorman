@@ -7,3 +7,10 @@ updates:
     groups:
       github-actions:
         patterns: ['*']
+  - package-ecosystem: npm
+    directory: /examples/nextjs
+    schedule:
+      interval: weekly
+    groups:
+      demo-dependencies:
+        patterns: ['*']
