@@ -6,6 +6,24 @@ Your website already has the content. Doorman helps serve it in the format the r
 
 Install the library, give your coding agent the included instructions, and connect your public pages to their content sources. Browsers keep getting your website. Agents that request `text/markdown` get structured text they can read without running the page's JavaScript.
 
+## Try the live demo
+
+Open the [Next.js guide](https://doorman-demo-dun.vercel.app/docs/getting-started) in a browser or request both formats at the same URL:
+
+```sh
+curl -fsS -H 'Accept: text/html' https://doorman-demo-dun.vercel.app/docs/getting-started
+curl -fsS -H 'Accept: text/markdown' https://doorman-demo-dun.vercel.app/docs/getting-started
+```
+
+The browser loads the article after the page opens. The Markdown response includes it immediately. To reproduce the integration, see the [tested Next.js App Router example](https://github.com/heyrtl/doorman/tree/main/examples/nextjs).
+
+Verify the demo with Doorman 0.1.5 or later installed:
+
+```sh
+npm exec -- doorman check https://doorman-demo-dun.vercel.app/docs/getting-started \
+  --expect '# Getting started' --expect-html 'Loading guide'
+```
+
 ## If you're a human
 
 Open your website's project in Claude Code, Codex, or another coding agent. Paste this:
@@ -163,7 +181,7 @@ The demo has a JavaScript-rendered HTML page and a Markdown response built from 
 
 ## Check a site
 
-Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, headers, and nonempty bodies, and reports any unexpected redirects. Use `--expect` for a literal Markdown phrase and `--expect-html` for a literal HTML phrase. Each check samples the first 1 MiB of the response.
+Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, media type, cache headers, and nonempty bodies, and reports any unexpected redirects. It accepts `Vary: Accept`, `Vary: *`, or `Cache-Control: no-store` on each response. Use `--expect` for a literal Markdown phrase and `--expect-html` for a literal HTML phrase. Each check samples the first 1 MiB of the response.
 
 ```sh
 node bin/doorman.js check http://localhost:3000/ \

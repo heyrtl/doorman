@@ -79,7 +79,7 @@ test('checker flags HTML served to Markdown requests and a missing Accept cache 
   await assert.rejects(promisify(execFile)(process.execPath, [cli, 'check', url, '--json']), (error) => {
     assert.equal(error.code, 1);
     const { checks } = JSON.parse(error.stdout);
-    assert.ok(checks.every(({ errors }) => errors.includes('Expected Vary to include Accept or *.')));
+    assert.ok(checks.every(({ errors }) => errors.includes('Expected Vary to include Accept or *, or Cache-Control: no-store.')));
     const markdown = checks.filter(({ format }) => format === 'markdown');
     assert.equal(markdown.length, 2);
     assert.ok(markdown.every(({ errors }) => errors.includes('Expected Content-Type: text/markdown.')));

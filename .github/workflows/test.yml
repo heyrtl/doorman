@@ -38,12 +38,29 @@ jobs:
           JS
           test -s node_modules/@heyrtl/doorman/DOORMAN.md
 
+  nextjs:
+    name: Next.js production integration
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/nextjs
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+
   gate:
     name: CI / merge gate
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, nextjs]
     if: ${{ always() }}
     env:
       TEST_RESULT: ${{ needs.test.result }}
+      NEXTJS_RESULT: ${{ needs.nextjs.result }}
     steps:
-      - run: test "$TEST_RESULT" = success
+      - run: test "$TEST_RESULT" = success && test "$NEXTJS_RESULT" = success
