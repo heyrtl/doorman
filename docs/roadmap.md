@@ -12,6 +12,10 @@ The npm package serves HTML and Markdown from the same URL. The CLI verifies tha
 
 Later candidates include discovery checks for sitemaps and canonical links, another agent runner or bring-your-own-key setup, a GitHub App that opens draft PRs, and read-only tools such as docs search. Revisit Laravel when there is a real target app. Versions after `0.1.4` are targets and can move as integrations are validated.
 
+## Show HN launch target
+
+Target `0.1.5` once a public demo actually runs the published package. Put two copyable requests and an npm checker command near the top of the README so anyone can try the same page in HTML and Markdown without an account or API key. Include the tested Next.js fixture so interested developers can reproduce the integration. Before posting, have someone unfamiliar with Doorman try the demo and follow the setup on a fresh checkout. Ask for feedback on where the setup breaks or feels unclear.
+
 ## Release practice
 
 Develop on feature branches. Merge a version bump to `main` when the release's acceptance criteria pass. The workflow stages new versions after CI passes, and a maintainer approves them in npm before they go public. Approved versions then sync to GitHub Packages and Releases. See [the publishing guide](publishing.md).
