@@ -81,6 +81,6 @@ Only versions present in the public npm registry are eligible. The sync checks n
 
 Each release page is tagged at the published commit, includes generated change notes, and attaches the original npm archive. The GitHub workflow uses the built-in `GITHUB_TOKEN` with package and repository write permissions; no extra stored token is required.
 
-GitHub initially makes new packages private. After the first mirror, set the package's visibility to Public in its Package settings if it is not already public. Repository linkage and access inheritance are provided by the package's existing `repository` field. GitHub's registry requires authentication for package installation even for public npm packages, so the README continues to recommend the public npm registry for users.
+The mirror requests public access. Verify Public visibility in Package settings after the first mirror; package visibility is separate from repository visibility. The initial Doorman mirror was verified public and linked to `heyrtl/doorman`. Repository linkage and access inheritance are provided by the package's existing `repository` field. GitHub's registry requires authentication for package installation even for public npm packages, so the README continues to recommend the public npm registry for users.
 
 If an npm archive is still processing or a sync step fails, rerun the workflow after the issue clears. Package publication and release-page creation are independently checked, so a retry can finish a partially completed sync.
