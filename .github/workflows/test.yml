@@ -1,15 +1,49 @@
 name: Test
-on: [push, pull_request]
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
 jobs:
   test:
+    name: Node ${{ matrix.node }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [22, 24]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
+          package-manager-cache: false
       - run: npm test
-      - run: npm pack --dry-run
+      - name: Smoke test the installed npm archive
+        shell: bash
+        run: |
+          smoke_dir=$(mktemp -d)
+          trap 'rm -rf "$smoke_dir"' EXIT
+          archive=$(npm pack --silent --pack-destination "$smoke_dir")
+          npm install --prefix "$smoke_dir" --offline --ignore-scripts --no-audit --no-fund "$smoke_dir/$archive"
+          cd "$smoke_dir"
+          ./node_modules/.bin/doorman --help | grep -F 'Usage: doorman check'
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import { createDoorman } from '@heyrtl/doorman';
+          assert.equal(typeof createDoorman, 'function');
+          JS
+          test -s node_modules/@heyrtl/doorman/DOORMAN.md
+
+  gate:
+    name: CI / merge gate
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ always() }}
+    env:
+      TEST_RESULT: ${{ needs.test.result }}
+    steps:
+      - run: test "$TEST_RESULT" = success

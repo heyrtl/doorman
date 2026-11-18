@@ -61,7 +61,7 @@ Verify a fresh installation of the released version. npm's public metadata and d
 
 If a run fails, fix the issue and rerun it from GitHub Actions, or select Run workflow on `main`. A version already public is skipped. A version already staged also reserves that version number: if a rerun reports it exists, review and approve the existing staged release rather than trying to overwrite it. Registry errors stop the workflow. Staging needs no browser approval, but each release requires your review and approval on npm before publication.
 
-The npm archive contains the library, types, README, agent instructions, package metadata, and MIT license. Release scripts, maintainer docs, tests, and workflow files stay in GitHub.
+The npm archive contains the runtime library, site checker CLI, types, README, agent instructions, package metadata, and MIT license. Release scripts, maintainer docs, tests, and workflow files stay in GitHub.
 
 See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for configuration and troubleshooting. The repository URL in `package.json` must continue to match this GitHub repository.
 

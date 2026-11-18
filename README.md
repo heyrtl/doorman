@@ -161,6 +161,24 @@ curl -I -H 'Accept: text/markdown' http://localhost:3000/
 
 The demo has a JavaScript-rendered HTML page and a Markdown response built from the same data. Tests cover negotiation, fallthrough, headers, HEAD, errors, and actual HTTP requests.
 
+## Check a site
+
+Run the checker against the final URL of a public page or a local preview. It requests HTML and Markdown in both orders at the same URL, checks status, headers, and nonempty bodies, and reports any unexpected redirects. Use `--expect` for a literal Markdown phrase and `--expect-html` for a literal HTML phrase. Each check samples the first 1 MiB of the response.
+
+```sh
+node bin/doorman.js check http://localhost:3000/ \
+  --expect '# Hello from Doorman' --expect-html '<main id="content">'
+```
+
+The CLI ships alongside the runtime and guide starting with `0.1.4`. With Doorman installed in your project, add a step like this to CI after your preview is ready:
+
+```sh
+npm exec -- doorman check "$PREVIEW_URL/docs/getting-started" \
+  --expect 'Getting started' --json
+```
+
+Run the command for each route you want to verify. The exit code is `0` when all checks pass, `1` for failed response checks, and `2` for invalid input. Checking a deployed URL exercises the host's caching behavior for those requests. Content assertions are literal checks, so choose a phrase that should survive future edits.
+
 ## Scope
 
 This helps readers that request Markdown fetch public content without running its UI JavaScript. It does not force tools to send that header, make inaccessible/private data public, guarantee search indexing/citations, or represent interactive app state automatically. Google says special Markdown files and `llms.txt` are not required for its Search AI features.
